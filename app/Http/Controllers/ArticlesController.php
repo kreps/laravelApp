@@ -5,12 +5,14 @@ use App\Article;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laracasts\Flash\Flash;
+use App\Tag;
 
 
 class ArticlesController extends Controller
 {
     /**
-     *  Constructor
+     *  Create a new article controller instance.
      */
     public function __construct()
     {
@@ -28,47 +30,88 @@ class ArticlesController extends Controller
         return view('articles.index', compact('articles'));
     }
 
-    public function show($id)
+    /**
+     * @param Article $article
+     * @return \Illuminate\View\View
+     */
+    public function show(Article $article)
     {
-        $article = Article::findOrFail($id);
         return view('articles.show', compact('article'));
     }
 
     public function create()
     {
-        if (Auth::guest()) {
-            return redirect('articles');
-        }
-        return view('articles.create');
+        $tags = Tag::lists('name','id');
+
+        return view('articles.create',compact('tags'));
     }
 
     /** Save a new article
+     *
      * @param ArticleRequest $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector Response
      */
     public function store(ArticleRequest $request)
     {
-        $article = new Article($request->all());
-        Auth::user()->articles()->save($article);
+        $this->createArticle($request);
+
+        flash()->success('Article has been created!', 'Great succes!');
+
         return redirect('articles');
     }
 
     /**
-     * @param $id
+     * Edit existing article
+     *
+     * @param Article $article
      * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(Article $article)
     {
-        $article = Article::findOrFail($id);
+        $tags = Tag::lists('name','id');
 
-        return view('articles.edit', compact('article'));
+        return view('articles.edit', compact('article','tags'));
     }
 
-    public function update($id, ArticleRequest $request)
+    /**
+     * Update existing article
+     *
+     * @param Article $article
+     * @param ArticleRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(Article $article, ArticleRequest $request)
     {
-        $article = Article::findOrFail($id);
         $article->update($request->all());
+
+        $this->syncTags($article, $request->input('taglist'));
+
         return redirect('articles');
 
+    }
+
+
+    /** sync up list of tags in db
+     * @param Article $article
+     * @param array $tags
+     */
+    private function syncTags(Article $article, array $tags)
+    {
+        $article->tags()->sync($tags);
+    }
+
+    /**
+     * Save new article
+     *
+     * @param ArticleRequest $request
+     * @return mixed
+     */
+    public function createArticle(ArticleRequest $request)
+    {
+        $article = Auth::user()->articles()->create($request->all());
+
+        $this->syncTags($article, $request->input('taglist'));
+
+        return $article;
     }
 }

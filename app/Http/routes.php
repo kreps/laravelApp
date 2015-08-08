@@ -13,7 +13,9 @@ Route::controllers([
     'password' => 'Auth\PasswordController'
 ]);
 
-Route::get('foo', ['middleware'=> 'manager',function(){
-    return 'page only for managers';
-}]);
+Route::get('foo/{bar}',
+function (){
+
+}
+);
 

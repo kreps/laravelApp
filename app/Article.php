@@ -37,17 +37,28 @@ class Article extends Model
     }
 
     /**
+     * @param $date
+     * @return Carbon
+     */
+    public function getPublishedAtAttribute($date)
+    {
+        return new Carbon($date);
+    }
+
+    /**
      * An article has always 1 user
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo('App\User');
     }
 
     /** Get tags associated with the article
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function tags(){
+    public function tags()
+    {
         return $this->belongsToMany('App\Tag')->withTimestamps();
     }
 

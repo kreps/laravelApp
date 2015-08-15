@@ -11,7 +11,7 @@ class PagesController extends Controller {
         $people = [
             'Tom', 'Tim', 'Kristjan'
         ];
-        $people = [];
+
         return view('pages.about', compact('people'));
     }
 

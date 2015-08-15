@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="/css/all.css">
 </head>
 <body>
+<!-- Docs master nav -->
+@include('partials.nav')
+
+
 <div class="container">
     {{--@include('partials.flash')--}}
     @include('flash::message')

@@ -15,11 +15,11 @@ elixir(function(mix) {
     mix.sass('app.scss');
     mix.styles([
         'libs/bootstrap.min.css',
-        'app.css',
+        'app.min.css',
         'libs/select2.min.css'
     ]);
     mix.scripts([
-        'libs/jquery.js',
+        'libs/jquery.min.js',
         'libs/select2.min.js'
     ]);
 });

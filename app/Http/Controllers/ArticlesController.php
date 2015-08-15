@@ -27,7 +27,8 @@ class ArticlesController extends Controller
     public function index()
     {
         $articles = Article::latest('published_at')->published()->get();
-        return view('articles.index', compact('articles'));
+        $latest = Article::latest()->first();
+        return view('articles.index', compact('articles', 'latest'));
     }
 
     /**
@@ -41,9 +42,9 @@ class ArticlesController extends Controller
 
     public function create()
     {
-        $tags = Tag::lists('name','id');
+        $tags = Tag::lists('name', 'id');
 
-        return view('articles.create',compact('tags'));
+        return view('articles.create', compact('tags'));
     }
 
     /** Save a new article
@@ -68,9 +69,9 @@ class ArticlesController extends Controller
      */
     public function edit(Article $article)
     {
-        $tags = Tag::lists('name','id');
+        $tags = Tag::lists('name', 'id');
 
-        return view('articles.edit', compact('article','tags'));
+        return view('articles.edit', compact('article', 'tags'));
     }
 
     /**

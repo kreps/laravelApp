@@ -4,8 +4,6 @@
 
     <h1>Articles</h1>
 
-    <hr/>
-
     @foreach($articles as $article)
 
         <article>
@@ -15,7 +13,6 @@
             </h2>
 
             <div class="body">{{$article->body}}
-                <hr>
             {{$article->published_at->diffForHumans()}}
             </div>
 
